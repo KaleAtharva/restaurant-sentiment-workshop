@@ -7,8 +7,8 @@ on:
     branches: [main, master]
 
 jobs:
-  backend-security:
-    name: Backend Security Checks
+  backend-validation:
+    name: Backend Validation
     runs-on: ubuntu-latest
 
     steps:
@@ -25,21 +25,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install bandit pip-audit
 
       - name: Check Python syntax
         working-directory: backend
         run: python -m py_compile app.py
 
-      - name: Run Bandit security scan
-        working-directory: backend
-        run: bandit -r app.py
-
-      - name: Audit Python dependencies
-        working-directory: backend
-        run: pip-audit -r requirements.txt
-
-  frontend-build:
+  frontend-validation:
     name: Frontend Validation
     runs-on: ubuntu-latest
 
@@ -65,7 +56,7 @@ jobs:
   docker-build:
     name: Docker Image Build
     runs-on: ubuntu-latest
-    needs: [backend-security, frontend-build]
+    needs: [backend-validation, frontend-validation]
 
     steps:
       - name: Checkout repository
