@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: sentiment-backend
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: sentiment-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
