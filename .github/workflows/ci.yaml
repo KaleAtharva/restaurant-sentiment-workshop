@@ -2,9 +2,9 @@ name: Restaurant Sentiment CI-CD
 
 on:
   push:
-    branches: [main]
+    branches: [main, devops-demo]
   pull_request:
-    branches: [main]
+    branches: [main, devops-demo]
 
 permissions:
   contents: read
