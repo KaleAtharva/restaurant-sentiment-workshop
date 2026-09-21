@@ -8,7 +8,7 @@ ENV NLTK_DATA=/usr/share/nltk_data
 
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade setuptools wheel  && pip install --no-cache-dir -r requirements.txt
 
 # Download NLTK stopwords at build time, not at container startup
 RUN python -c "import nltk; nltk.download('stopwords', download_dir='/usr/share/nltk_data')"
