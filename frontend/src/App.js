@@ -30,7 +30,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <h2>Restaurant Review Sentiment Analysis</h2>
+      <h2>Restaurant Reviews Sentiment Analysis</h2>
       <form onSubmit={handleSubmit}>
         <label>
           Enter your restaurant review:
