@@ -85,6 +85,49 @@ jobs:
         working-directory: backend
         run: pip-audit -r requirements.txt
 
+  image-security:
+    name: Docker Image Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend image for scanning
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          load: true
+          tags: restaurant-backend:scan
+
+      - name: Scan backend image with Trivy
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: restaurant-backend:scan
+          format: table
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          ignore-unfixed: true
+
+      - name: Build frontend image for scanning
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          load: true
+          tags: restaurant-frontend:scan
+
+      - name: Scan frontend image with Trivy
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: restaurant-frontend:scan
+          format: table
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          ignore-unfixed: true
+
   publish-images:
     name: Publish Docker Images
     runs-on: ubuntu-latest
@@ -92,6 +135,7 @@ jobs:
       - backend-validation
       - frontend-validation
       - backend-security
+      - image-security
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     permissions:
